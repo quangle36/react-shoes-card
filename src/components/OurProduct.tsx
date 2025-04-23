@@ -1,71 +1,43 @@
-import Button from './Button';
-import Image from './Image';
-
+import { data } from '../data';
+import ShopItem from './ShopItem';
+import { useAppContext } from '../contexts/AppContext';
+import { IProduct } from '../type';
 function OurProduct() {
-  return (
-    <div className="card">
-      <div className="cardTop">
-        <img
-          alt=""
-          src="https://cdn-icons-png.flaticon.com/512/732/732084.png"
-        />
-      </div>
+	const { addItem, items } = useAppContext();
 
-      <div className="cardTitle">Our Products</div>
+	const handleAddToCart = (item: IProduct) => {
+		if (!items.some((cartItem) => cartItem.id === item.id))
+			addItem({ ...item, quantity: 1 });
+	};
+	return (
+		<div className="card">
+			<div className="cardTop">
+				<img
+					alt=""
+					src="https://
+          cdn-icons-png.flaticon.com/512/732/732084.png"
+				/>
+			</div>
 
-      <div className="cardBody">
-        <div className="shopItem">
-          <div
-            className="shopItem_image"
-            style={{ backgroundColor: "rgb(212, 215, 214)" }}
-          >
-            <img
-              alt=""
-              src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1315882/air-zoom-pegasus-36-mens-running-shoe-wide-D24Mcz-removebg-preview.png"
-            />
-          </div>
-          <div className="shopItem_name">Nike Air Zoom Pegasus 36</div>
-          <div className="shopItem_description">
-            The iconic Nike Air Zoom Pegasus 36 offers more cooling and mesh
-            that targets breathability across high-heat areas. A slimmer heel
-            collar and tongue reduce bulk, while exposed cables give you a
-            snug fit at higher speeds.
-          </div>
-          <div className="shopItem_bottom">
-            <div className="shopItem_price">$108.97</div>
+			<div className="cardTitle">Our Products</div>
 
-            <Button 
-              buttonText="ADD TO CART"
-            />
-          </div>
-        </div>
-        <div className="shopItem">
-          <div
-            className="shopItem_image"
-            style={{ backgroundColor: "rgb(34, 175, 220)" }}
-          >
-            <Image 
-              src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1315882/air-zoom-pegasus-36-mens-running-shoe-wide-D24Mcz-removebg-preview.png"
-            />
-          </div>
-          <div className="shopItem_name">Nike Air Zoom Pegasus 36</div>
-          <div className="shopItem_description">
-            The iconic Nike Air Zoom Pegasus 36 offers more cooling and mesh
-            that targets breathability across high-heat areas. A slimmer heel
-            collar and tongue reduce bulk, while exposed cables give you a
-            snug fit at higher speeds.
-          </div>
-          <div className="shopItem_bottom">
-            <div className="shopItem_price">$108.97</div>
-            <Button 
-              buttonText="ADD TO CART"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
-  )
+			<div className="cardBody">
+				{data.map((product) => {
+					const isAdded = items.some((cartItem) => cartItem.id === product.id);
+					return (
+						<ShopItem
+							key={product.id}
+							{...product}
+							onAddToCart={() => {
+								handleAddToCart(product);
+							}}
+							isAdded={isAdded}
+						/>
+					);
+				})}
+			</div>
+		</div>
+	);
 }
 
-export default OurProduct
+export default OurProduct;
