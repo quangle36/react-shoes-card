@@ -1,19 +1,23 @@
+import React from 'react';
 import { useAppContext } from '../contexts/AppContext';
 import ShopItemCart from './ShopItemCart';
 
 function YourCart() {
 	const { items, onChangeQuantity } = useAppContext();
-	const { totalPrice, totalQuantity } = items.reduce(
-		(acc, item) => {
-			acc.totalQuantity += item.quantity || 0;
-			acc.totalPrice += item.price * (item.quantity || 0);
-			return acc;
-		},
-		{
-			totalPrice: 0,
-			totalQuantity: 0,
-		}
-	);
+	const { totalPrice, totalQuantity } = React.useMemo(() => {
+		return items.reduce(
+			(acc, item) => {
+				acc.totalQuantity += item.quantity || 0;
+				acc.totalPrice += item.price * (item.quantity || 0);
+				return acc;
+			},
+			{
+				totalPrice: 0,
+				totalQuantity: 0,
+			}
+		);
+	}, [items]);
+	
 	return (
 		<div className="card">
 			<div className="cardTop">
